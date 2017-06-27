@@ -1,0 +1,31 @@
+\documentclass{article}
+\thispagestyle{empty}
+\usepackage[letterpaper]{geometry}
+\title{Notes On Greeks}
+\begin{document}
+
+Symbology.
+
+\begin{tabular}
+{ l l }
+$T$ & Price of the option \\
+$S$ & Price of the underlying \\
+$t$ & Time \\
+$v$ & Volatility \\
+$r$ & interest rate \\
+\end{tabular}
+
+\begin{tabular}
+{ c l c p{2.8in} }
+Symbol & Name & Formula & Explanation, interpretation, intuition \\
+\hline \\
+$\Delta$ & Delta & \begin{math}{\displaystyle \partial T }\over{\displaystyle \partial S}\end{math} & Sensitivity of the option price to movements in the price of the underlying \begin{itemize} \item Probability that option will be in the money \end{itemize} \\
+$\Gamma$ & Gamma & ${\displaystyle \partial^{2} T} \over {\displaystyle \partial S ^{2}}$ & A measure of how closely the option is tracking the underlying.  High gamma positions will move in a way strongly correlated with the underlying.  Low gamma positions will not. \\
+$\Theta$ & Theta & ${\displaystyle \partial T }\over {\displaystyle \partial t} $ & Decay (generally) in value of option as time passes \\
+$K$ & Kappa (aka 'Vega') & $ {\displaystyle \partial T} \over {\displaystyle \partial v} $ & Sensitivity of price to changes in volatility \\
+$P$ & Rho & ${\displaystyle \partial T }\over {\displaystyle \partial r} $ & Sensitivity of price to changes in interest rates \\
+\end{tabular}
+
+
+\end{document}
+
