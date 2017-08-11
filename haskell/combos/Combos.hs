@@ -1,3 +1,5 @@
+-- Print out permutations for Louisa's blanket
+
 import Data.List (intersperse)
 
 colors = ["Green","Yellow","Blue","Red","Grey"]
