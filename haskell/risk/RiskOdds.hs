@@ -6,6 +6,7 @@ pairwise contests, with ties awarded to the defender.
 --}
 
 import Data.List (reverse, sort)
+import Data.Map.Lazy as Map (Map, empty, alter)
 
 die :: [Int]
 die = [1..6]
@@ -33,6 +34,14 @@ add (a,b) (c,d) = (a+c, b+d)
 expected_total :: [[Int]] -> [[Int]] -> (Int, Int)
 expected_total ass dss = foldr add (0,0) $ map resolve battles
   where battles = [(as,ds) | as <- ass, ds <- dss]
+
+count_resolutions :: [[Int]] -> [[Int]] -> Map (Int, Int) Int
+count_resolutions ass dss = foldr (Map.alter increment) Map.empty $ map resolve battles
+  where battles = [(as,ds) | as <- ass, ds <- dss]
+
+increment :: Maybe Int -> Maybe Int
+increment (Just a) = Just (a + 1)
+increment Nothing  = Just 1
 
                                    
 one_on_one = expected_total one_die_outcomes one_die_outcomes
