@@ -42,7 +42,6 @@ count_resolutions ass dss = foldr (Map.alter increment) Map.empty $ map resolve 
 increment :: Maybe Int -> Maybe Int
 increment (Just a) = Just (a + 1)
 increment Nothing  = Just 1
-
                                    
 one_on_one = expected_total one_die_outcomes one_die_outcomes
 two_on_one = expected_total two_die_outcomes one_die_outcomes
