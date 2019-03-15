@@ -51,9 +51,18 @@ shortest = minimumBy shorter
 increment_nth (a:as) 0 = (a+1):as
 increment_nth (a:as) n = a:(increment_nth as (n-1))
 
-dynamic 0 = 0
-dynamic n = minimum solutions
+dynamic_count 0 = 0
+dynamic_count n = minimum solutions
     where qs = filter (<=n) denominations
-          solutions = map (\d -> 1 + dynamic (n-d)) qs
+          solutions = map (\d -> 1 + dynamic_count (n-d)) qs
 
+dynamic goal ds = dyn goal [] ds
 
+dyn 0 [] _ = []
+dyn 0 cs _ = cs
+dyn n cs ds = shortest solutions
+    where qs = filter (<=n) ds
+          solutions = map (\d -> d:(dyn (n-d) cs ds)) qs
+
+check_dynamic =
+    all (\g -> g == (sum $ dynamic g denominations)) [1..10]
