@@ -2,7 +2,9 @@ import Data.List
 
 denominations = [1, 3, 4]
 
-empty = take (length denominations) (repeat 0)
+coin_count = length denominations
+
+empty = take coin_count (repeat 0)
 
 compute coins values = sum $ zipWith (*) coins values
 
@@ -36,19 +38,22 @@ prepend_to_all i ls = map (\l -> i:l) ls
 check_exhaustive =
     all (\g -> g == compute denominations (exhaustive g)) [1..100]
 
-dynamic goal = dynamic' goal [] denominations
-
 prepender :: a -> [[a]] -> [[a]]
 prepender i [] = [[i]]
 prepender i ls = map (\l -> i:l) ls
 
-dynamic' :: Int -> [[Int]] -> [Int] -> [[Int]]
-dynamic' 0 cs _  = cs
-dynamic' g cs ds = concatMap (\d -> prepender d (qs d)) $ (filter (<=g) ds)
-    where qs d = dynamic' (g-d) cs ds
-    
-{--
-check_dynamic =
-    all (\g -> g == compute denominations (dynamic g)) [1..100]
---}
+shorter :: [a] -> [a] -> Ordering
+shorter as bs = compare (length as) (length bs)
+
+shortest :: [[a]] -> [a]
+shortest = minimumBy shorter
+
+increment_nth (a:as) 0 = (a+1):as
+increment_nth (a:as) n = a:(increment_nth as (n-1))
+
+dynamic 0 = 0
+dynamic n = minimum solutions
+    where qs = filter (<=n) denominations
+          solutions = map (\d -> 1 + dynamic (n-d)) qs
+
 
