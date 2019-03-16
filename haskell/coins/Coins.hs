@@ -1,4 +1,15 @@
 import Data.List
+import Data.Function.Memoize
+
+{--
+Several approaches to solving the change making problem.
+1. A greedy algorithm. It works, but it does not always
+find the smallest number of coins.
+2. An exhaustive search. It always works.
+3. A dynamic programming solution. It should be
+more efficient than the exhaustive search and find
+equivalent solutions. Uses memoization.
+--}
 
 denominations = [1, 3, 4]
 
@@ -38,31 +49,29 @@ prepend_to_all i ls = map (\l -> i:l) ls
 check_exhaustive =
     all (\g -> g == compute denominations (exhaustive g)) [1..100]
 
-prepender :: a -> [[a]] -> [[a]]
-prepender i [] = [[i]]
-prepender i ls = map (\l -> i:l) ls
-
 shorter :: [a] -> [a] -> Ordering
 shorter as bs = compare (length as) (length bs)
 
 shortest :: [[a]] -> [a]
 shortest = minimumBy shorter
 
-increment_nth (a:as) 0 = (a+1):as
-increment_nth (a:as) n = a:(increment_nth as (n-1))
-
 dynamic_count 0 = 0
 dynamic_count n = minimum solutions
     where qs = filter (<=n) denominations
           solutions = map (\d -> 1 + dynamic_count (n-d)) qs
 
-dynamic goal ds = dyn goal [] ds
-
+dyn :: Int -> [Int] -> [Int] -> [Int]
 dyn 0 [] _ = []
 dyn 0 cs _ = cs
 dyn n cs ds = shortest solutions
     where qs = filter (<=n) ds
-          solutions = map (\d -> d:(dyn (n-d) cs ds)) qs
+          solutions = map (\d -> d:(mem_dyn (n-d) cs ds)) qs
+
+mem_dyn = memoize3 dyn
+
+dynamic :: Int -> [Int] -> [Int]
+dynamic goal ds = dyn goal [] ds
 
 check_dynamic =
-    all (\g -> g == (sum $ dynamic g denominations)) [1..10]
+    all (\g -> g == (sum $ dynamic g denominations)) [1..100]
+
