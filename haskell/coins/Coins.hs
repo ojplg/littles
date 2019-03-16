@@ -12,12 +12,10 @@ equivalent solutions. Uses memoization.
 --}
 
 denominations = [1, 3, 4]
-
-coin_count = length denominations
-
-empty = take coin_count (repeat 0)
-
 compute coins values = sum $ zipWith (*) coins values
+
+-- A greedy algorithm solution
+-- This creates an array of counts of length equal to the denominations
 
 greedy goal = reverse $ greedy' goal 0 (reverse denominations)
 
@@ -33,6 +31,9 @@ greedy' g c (d:ds) =
 check_greedy =
     all (\g -> g == compute denominations (greedy g)) [1..100]
     
+-- An exhaustive search
+-- This creates an array of counts of length equal to the denominations
+
 exhaustive goal = minimumBy (\as bs -> compare (sum as) (sum bs)) corrects
     where limits = map (\c -> goal `div` c) denominations
           ranges = map (\l -> [0..l]) limits
@@ -49,6 +50,9 @@ prepend_to_all i ls = map (\l -> i:l) ls
 check_exhaustive =
     all (\g -> g == compute denominations (exhaustive g)) [1..100]
 
+-- A dynamic algorithm solution
+-- This creates a list of the coin values (different from two above)
+
 shorter :: [a] -> [a] -> Ordering
 shorter as bs = compare (length as) (length bs)
 
@@ -63,9 +67,7 @@ dynamic_count n = minimum solutions
 dyn :: Int -> [Int] -> [Int] -> [Int]
 dyn 0 [] _ = []
 dyn 0 cs _ = cs
-dyn n cs ds = shortest solutions
-    where qs = filter (<=n) ds
-          solutions = map (\d -> d:(mem_dyn (n-d) cs ds)) qs
+dyn n cs ds = shortest $ map (\d -> d:(mem_dyn (n-d) cs ds)) $ filter (<=n) ds
 
 mem_dyn = memoize3 dyn
 
@@ -74,4 +76,7 @@ dynamic goal ds = dyn goal [] ds
 
 check_dynamic =
     all (\g -> g == (sum $ dynamic g denominations)) [1..100]
+
+check_dynamic_2 =
+    all (\g -> (length $ dynamic g denominations) == (dynamic_count g)) [1..20]
 
