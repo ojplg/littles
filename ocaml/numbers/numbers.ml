@@ -63,7 +63,17 @@ let pattern_to_line pattern row_number magnification =
         let s = if pattern.top_left then "|" else " " in
         let e = if pattern.top_right then "|" else " " in
             String.concat [s; String.make magnification c; e]
-    else ""
+    else if is_top_half row_number magnification then 
+        let c = ' ' in
+        let s = if pattern.top_left then "|" else " " in
+        let e = if pattern.top_right then "|" else " " in
+            String.concat [s; String.make magnification c; e]
+    else if is_bottom_half row_number magnification then
+        let c = ' ' in
+        let s = if pattern.bottom_left then "|" else " " in
+        let e = if pattern.bottom_right then "|" else " " in
+            String.concat [s; String.make magnification c; e]
+    else "ERROR" 
 
 let range limit = 
     let rec range' n ns = 
@@ -73,7 +83,7 @@ let range limit =
 
 let pattern_to_lines pattern magnification = 
     let length = height magnification in
-    let ns = range length in
+    let ns = range (length-1) in
     List.map ns (function n -> pattern_to_line pattern n magnification)
 
 let print_pattern p = 
@@ -85,7 +95,7 @@ let print_magnified_pattern pattern magnification =
     List.iter lines (function l -> printf "%s\n" l)
 
 let () = 
-    List.iter patterns (function p -> print_magnified_pattern p 1)
+    List.iter patterns (function p -> print_magnified_pattern p 3)
 
 let print_magnified_line pattern magnification line_number = 
     let line = pattern_to_line pattern line_number magnification in
