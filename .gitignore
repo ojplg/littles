@@ -5,3 +5,5 @@ RiskOdds
 *swp
 SumSquares
 *.class
+*a.out
+*cmi

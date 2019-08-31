@@ -29,6 +29,28 @@ let nine = { top=true; middle=true; bottom=true; top_left=true; bottom_left=fals
 
 let patterns = [ zero; one; two; three; four; five; six; seven; eight; nine; ]
 
+let char_to_pattern c =
+    match c with
+    | '0' -> zero
+    | '1' -> one
+    | '2' -> two
+    | '3' -> three
+    | '4' -> four
+    | '5' -> five
+    | '6' -> six
+    | '7' -> seven
+    | '8' -> eight
+    | '9' -> nine
+    | _   -> assert false
+
+let rec list_car ch = match ch with
+    | "" -> []
+    | ch -> (String.get ch 0 ) :: (list_car (String.sub ch 1 ( (String.length ch)-1) ) )
+
+let string_to_patterns s = 
+    let cs = list_car s in
+    List.map cs char_to_pattern 
+
 let pattern_to_string p =
     let top_char = if p.top then "_" else " " in
     let middle_char = if p.middle then "_" else " " in
@@ -95,8 +117,9 @@ let print_magnified_pattern pattern magnification =
     List.iter lines (function l -> printf "%s\n" l)
 
 let () = 
-    List.iter patterns (function p -> print_magnified_pattern p 3)
+    let value = Sys.argv.(1) in
+    let magnification = int_of_string Sys.argv.(2) in
+    printf "Value %s magnified %i\n" value magnification;
+    let patterns = string_to_patterns value in
+    List.iter patterns (function p -> print_magnified_pattern p magnification)
 
-let print_magnified_line pattern magnification line_number = 
-    let line = pattern_to_line pattern line_number magnification in
-    printf "%s\n" line
