@@ -119,7 +119,10 @@ let print_magnified_pattern pattern magnification =
 let () = 
     let value = Sys.argv.(1) in
     let magnification = int_of_string Sys.argv.(2) in
+    let rows = range ((height magnification)-1) in
     printf "Value %s magnified %i\n" value magnification;
     let patterns = string_to_patterns value in
-    List.iter patterns (function p -> print_magnified_pattern p magnification)
+    List.iter rows (function row -> 
+        let line = String.concat ~sep:" " (List.map patterns (function p -> pattern_to_line p row magnification)) in
+        printf "%s\n" line)
 
